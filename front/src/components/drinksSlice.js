@@ -1,30 +1,41 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-const initialState = {
-    drinks: [
-        {
-            name: "Puerh Tea",
-            taste: "bitter",
-            categories: ["tea", "hot drinks"],
-            origin: "China",
-            id: 1,
-        },
 
-        {
-            name: "Cocoa",
-            taste: "sweet",
-            categories: ["hot drinks", "desserts"],
-            origin: "Mexico",
-            id: 2,
-        },
-        {
-            name: "Kombucha",
-            taste: "sweet",
-            categories: ["fizzy drinks", "healthy"],
-            origin: "China",
-            id: 3,
-        }
-    ],
-    filteredDrinks: []
+export const fetchDrinks = createAsyncThunk('/', async () => {
+    const response = await fetch("http://localhost:3001/");
+    const jsonResponse = await response.json()
+    return jsonResponse
+})
+// const getResponse = await fetch("http://localhost:3001/").then(response => response.json())
+const initialState = {
+    // drinks: [
+    //     {
+    //         name: "Puerh Tea",
+    //         taste: "bitter",
+    //         categories: ["tea", "hot drinks"],
+    //         origin: "China",
+    //         id: 1,
+    //     },
+
+    //     {
+    //         name: "Cocoa",
+    //         taste: "sweet",
+    //         categories: ["hot drinks", "desserts"],
+    //         origin: "Mexico",
+    //         id: 2,
+    //     },
+    //     {
+    //         name: "Kombucha",
+    //         taste: "sweet",
+    //         categories: ["fizzy drinks", "healthy"],
+    //         origin: "China",
+    //         id: 3,
+    //     }
+    // ],
+    // filteredDrinks: []
+    drinks: [],
+    status: 'idle',
+    filteredDrinks: [],
+    error: null
 
 };
 export const drinksSlice = createSlice({
@@ -58,8 +69,25 @@ export const drinksSlice = createSlice({
         // delet: (state) => {
         //     state.value -= 1;
         // },
+    },
+    extraReducers(builder) {
+        builder
+            .addCase(fetchDrinks.pending, (state, action) => {
+                state.status = 'loading'
+            })
+            .addCase(fetchDrinks.fulfilled, (state, action) => {
+                state.status = 'succeeded'
+                // Add any fetched posts to the array
+                console.log(action + "action.payload");
+                state.drinks = state.drinks.concat(action.payload)
+            })
+            .addCase(fetchDrinks.rejected, (state, action) => {
+                state.status = 'failed'
+                state.error = action.error.message
+            })
     }
 })
+export const selectAllDrinks = state => state.drinksData.drinks
 //         // Use the PayloadAction type to declare the contents of `action.payload`
 //         incrementByAmount: (state, action) => {
 //             state.value += action.payload;

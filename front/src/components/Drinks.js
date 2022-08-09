@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // import drinks from './drinks.json'
 // import { showDetails } from './drinksSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import DrinkDetailedInfo from './SingleDrink';
 import Modal from './Modal';
 import { useAuth0 } from '@auth0/auth0-react';
-const Drinks = () => {
+import { selectAllDrinks, fetchDrinks } from './drinksSlice';
+
+const Drinks = ({ drinksFromDb }) => {
     const {
         isAuthenticated,
     } = useAuth0();
@@ -13,9 +15,10 @@ const Drinks = () => {
     const dispatch = useDispatch();
     const [showMode, setShowMode] = useState(false);
     const [chosenDrinkId, setChosenDrinkId] = useState("");
-    const drinks = useSelector(state => state.drinksData.drinks);
+    const drinks = useSelector(selectAllDrinks);
     const filteredDrinks = useSelector(state => state.drinksData.filteredDrinks)
-
+    const test = useSelector(state => state)
+    const drinksStatus = useSelector(state => state.drinksData.status)
     // const DrinkDetailedInfo = (props) => {
     //     const chosenDrink = drinks.find(drink => drink.id === props.id)
     //     return <Modal>
@@ -32,17 +35,36 @@ const Drinks = () => {
     //         </div>
     //     </Modal>
     // }
+    useEffect(() => {
+        if (drinksStatus === 'idle') {
+            dispatch(fetchDrinks())
+        }
+    }, [drinksStatus, dispatch])
+
+
     const showDrinkInfo = (id) => {
         setShowMode(true)
         setChosenDrinkId(id)
         // dispatch(showDetails(id));
     }
-    // console.log(filteredDrinks.length)
+    if (drinksStatus === 'loading') {
+        return <p> LOADING</p>
+    } else if (drinksStatus === 'succeeded') {
+        console.log(drinks);
+        console.log(JSON.stringify(drinks));
+    }
 
     return <div className="flex justify-between w-full">
         {
-            (filteredDrinks.length > 0 ? filteredDrinks : drinks).map((drink, index) =>
-                <div key={`${index}-${drink.name}`}><p data-testid={`detailedDrinkInfoBtn${index}`} onClick={() => showDrinkInfo(drink.id)}>{drink.name}</p></div>)
+            // (filteredDrinks.length > 0 ? filteredDrinks : drinks).
+            drinks.map((drink, index) =>
+                <div key={`${index}-${drink.name}`}>
+                    <p data-testid={`detailedDrinkInfoBtn${index}`}
+                        onClick={() => showDrinkInfo(drink.id)}>
+                        {drink.name}
+                    </p>
+                </div>
+            )
         }
         {
             showMode ? <DrinkDetailedInfo id={chosenDrinkId} setShowMode={() => setShowMode(false)} />
