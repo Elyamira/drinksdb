@@ -1,5 +1,4 @@
 
-import { Provider } from 'react-redux';
 import { fireEvent, render } from '@testing-library/react';
 import { screen } from '@testing-library/react';
 import Modal from '../Modal';
@@ -24,6 +23,7 @@ describe("Testing Navbar", () => {
 
     })
     test("modal portal should be unmounted", () => {
+        const hideFunc = jest.fn();
         const { unmount, queryByAltText } = render(
             <Modal>
                 <button data-testid="randomDrinkButton" className='absolute top-0 right-1' onClick={() => hideFunc()}>
