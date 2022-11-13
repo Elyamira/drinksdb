@@ -1,13 +1,12 @@
 import { useDispatch } from 'react-redux';
-import { filter } from './drinksSlice';
+import { resetFilter } from './slices/drinksSlice';
 
 const ResetFilterButton = (props) => {
     const dispatch = useDispatch();
     const showAllDrinks = () => {
-        dispatch((filter("")))
-        props.onReset()
-
-    }
-    return <button onClick={showAllDrinks}>ResetFilter</button>
-}
+        dispatch(resetFilter(''));
+        props.onReset();
+    };
+    return <button onClick={showAllDrinks}>Reset filter</button>;
+};
 export default ResetFilterButton;
