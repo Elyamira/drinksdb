@@ -13,7 +13,6 @@ describe("Single drink page tests", () => {
             </BrowserRouter>
         );
         const btn = screen.queryByTestId('detailedDrinkInfoBtn1')
-        console.log(btn);
 
     })
 })
