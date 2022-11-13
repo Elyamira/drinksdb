@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
-import Modal from '../Modal';
-import { showRDPopup, hideRDPopup } from '../popupRandomDrinkSlice';
+import Modal from '../modal/Modal';
+import { showRDPopup, hideRDPopup } from '../slices/popupRandomDrinkSlice';
 import { useDispatch } from 'react-redux';
 import closeBtn from '../../icons/close-btn.svg'
 const RandomDrinkButton = () => {
@@ -8,7 +8,7 @@ const RandomDrinkButton = () => {
     const popupState = useSelector(state => state.popupRandomDrink.status)
     const showRandomDrink = () => {
         dispatch(showRDPopup())
-        console.log(showRDPopup());
+
     }
     const RandomDrinkComponent = () => {
         const drinks = useSelector(state => state.drinksData.drinks);
