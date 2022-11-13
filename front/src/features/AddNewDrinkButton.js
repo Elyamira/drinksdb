@@ -1,9 +1,13 @@
-const AddNewDrinkButton = (props) => {
-    return <>
-        <button onClick={() => { props.handleOnAddNewDrink() }}>
-            Add new drink
-        </button>
-    </>
-
-}
+const AddNewDrinkButton = ({ handleOnAddNewDrink }) => {
+    return (
+        <>
+            <button
+                onClick={() => {
+                    handleOnAddNewDrink();
+                }}>
+                Add new drink
+            </button>
+        </>
+    );
+};
 export default AddNewDrinkButton;
