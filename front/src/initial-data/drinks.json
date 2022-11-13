@@ -1,0 +1,17 @@
+{"drinks":[
+    {"name":"Puerh Tea",
+    "taste":"bitter",
+"categories":["tea","hot drinks"],
+"origin":"China"},
+
+{"name":"Cocoa",
+    "taste":"sweet",
+"categories":["hot drinks","desserts"],
+"origin":"Mexico"},
+
+{"name":"Kombucha",
+    "taste":"sweet",
+"categories":["fizzy drinks","healthy"],
+"origin":"China"}
+]
+}
