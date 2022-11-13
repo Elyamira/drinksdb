@@ -14,12 +14,13 @@ const Drinks = () => {
     const filteredDrinks = useSelector(
         (state) => state.drinksData.filteredDrinks
     );
-    console.log(filteredDrinks.length + 'filteredDrinks');
+
     const drinksStatus = useSelector((state) => state.drinksData.status);
+
     useEffect(() => {
-        let x = filteredDrinks.length > 0 ? filteredDrinks : drinks;
-        setAllDrinks(x);
-        console.log(filteredDrinks);
+        const drinksToShow =
+            filteredDrinks.length > 0 ? filteredDrinks : drinks;
+        setAllDrinks(drinksToShow);
     }, [drinks, filteredDrinks]);
 
     useEffect(() => {
