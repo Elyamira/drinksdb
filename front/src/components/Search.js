@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux';
-import { filter } from './drinksSlice';
+import { filter } from './slices/drinksSlice';
 const Search = (props) => {
     const [searchedItem, setSearchedItem] = useState("");
     const dispatch = useDispatch();
@@ -11,7 +11,6 @@ const Search = (props) => {
     }
     const submitSearchForm = (e) => {
         e.preventDefault()
-        console.log(searchedItem);
         props.onGetValue(searchedItem)
         setSearchedItem("")
         dispatch(filter(searchedItem))
