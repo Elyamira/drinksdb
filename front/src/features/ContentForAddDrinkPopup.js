@@ -22,7 +22,6 @@ const ContentForAddNewDrinkPopup = () => {
         if (canSave) {
             try {
                 setAddRequestStatus('pending');
-                console.log(user.sub);
                 await dispatch(
                     addNewDrink({ taste, name, creatorId })
                 ).unwrap();
@@ -30,7 +29,6 @@ const ContentForAddNewDrinkPopup = () => {
                 setName('');
             } catch (err) {
                 setAddRequestStatus('failed');
-                console.error('Failed to save the drink: ', err);
                 dispatch(hidePopup());
                 dispatch(showError());
             } finally {
