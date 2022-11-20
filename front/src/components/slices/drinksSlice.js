@@ -28,6 +28,29 @@ export const addNewDrink = createAsyncThunk(
         }
     }
 );
+export const updateDrink = createAsyncThunk(
+    '/edit',
+    // The payload creator receives the partial `{taste, name}` object
+    async (updatedDrink) => {
+        // We send the initial data to the fake API server
+        const response = await fetch('http://localhost:3001/edit', {
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            method: 'POST',
+            body: JSON.stringify({ updatedDrink: { ...updatedDrink } }),
+        });
+        const jsonResponse = await response.json();
+        if (response.status === 400) {
+            throw new Error(jsonResponse.message);
+        }
+        if (response.status === 200) {
+            // fetchDrinks();
+            return jsonResponse;
+        }
+    }
+);
 
 const initialState = {
     drinks: [],
@@ -74,9 +97,16 @@ export const drinksSlice = createSlice({
             .addCase(addNewDrink.fulfilled, (state, action) => {
                 // We can directly add the new drink object to our drinks array
                 state.drinks.push(action.payload);
+            })
+            .addCase(updateDrink.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                // We can directly add the new drink object to our drinks array
+                // console.log(action.payload.state);
+
+                state.drinks = action.payload;
             });
     },
 });
 export const selectAllDrinks = (state) => state.drinksData.drinks;
-export const { add, filter, resetFilter } = drinksSlice.actions;
+export const { edit, add, filter, resetFilter } = drinksSlice.actions;
 export default drinksSlice.reducer;
