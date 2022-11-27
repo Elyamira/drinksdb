@@ -64,6 +64,11 @@ app.get('/', (req, res) => {
     });
 });
 
+app.get('/random', async (req, res) => {
+    const randomDrink = await Drink.aggregate().sample(1);
+    res.json(randomDrink);
+});
+
 app.post('/', async (req, res) => {
     try {
         const { taste, name, creatorId } = req.body;
