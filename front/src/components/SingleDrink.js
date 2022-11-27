@@ -1,7 +1,7 @@
 import Modal from './modal/Modal';
 import { useSelector } from 'react-redux';
 import { useAuth0 } from '@auth0/auth0-react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { updateDrink } from './slices/drinksSlice';
 import { hidePopup } from '../components/slices/popupInputsReducerSlice';
@@ -12,10 +12,7 @@ const DrinkDetailedInfo = (props) => {
     const { isAuthenticated, user } = useAuth0();
     const dispatch = useDispatch();
     const drinks = useSelector((state) => state.drinksData.drinks);
-    const [chosenDrink, setChosenDrink] = useState(
-        drinks?.find((drink) => drink._id === props.id)
-    );
-    // const chosenDrink = drinks?.find((drink) => drink._id === props.id);
+    const chosenDrink = drinks?.find((drink) => drink._id === props.id);
     const [isEditionMode, setIsEditionMode] = useState(false);
     const [editRequestStatus, setEditRequestStatus] = useState('idle');
 
