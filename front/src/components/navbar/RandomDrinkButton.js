@@ -41,7 +41,9 @@ const RandomDrinkButton = () => {
     };
     return (
         <>
-            <button onClick={showRandomDrink}>Get a random drink</button>
+            <button onClick={showRandomDrink} className='min-w-max'>
+                Get a random drink
+            </button>
             {popupState && <RandomDrinkComponent />}
         </>
     );
