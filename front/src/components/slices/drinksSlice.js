@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+const URL = 'http://localhost:3001/';
 export const fetchDrinks = createAsyncThunk('/', async () => {
-    const response = await fetch('http://localhost:3001/');
+    const response = await fetch(URL);
     const jsonResponse = await response.json();
     return jsonResponse;
 });
@@ -10,7 +11,7 @@ export const addNewDrink = createAsyncThunk(
     // The payload creator receives the partial `{taste, name}` object
     async (initialDrink) => {
         // We send the initial data to the fake API server
-        const response = await fetch('http://localhost:3001/', {
+        const response = await fetch(URL, {
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
@@ -33,7 +34,7 @@ export const updateDrink = createAsyncThunk(
     // The payload creator receives the partial `{taste, name}` object
     async (updatedDrink) => {
         // We send the initial data to the fake API server
-        const response = await fetch('http://localhost:3001/edit', {
+        const response = await fetch(`${URL}edit`, {
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
@@ -46,7 +47,68 @@ export const updateDrink = createAsyncThunk(
             throw new Error(jsonResponse.message);
         }
         if (response.status === 200) {
-            // fetchDrinks();
+            return jsonResponse;
+        }
+    }
+);
+
+export const addToFavourites = createAsyncThunk(
+    '/addToFavs',
+    async (updatedDrink) => {
+        const response = await fetch(`${URL}addToFavs`, {
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            method: 'POST',
+            body: JSON.stringify({ ...updatedDrink }),
+        });
+        const jsonResponse = await response.json();
+        if (response.status === 400) {
+            throw new Error(jsonResponse.message);
+        }
+        if (response.status === 200) {
+            return jsonResponse;
+        }
+    }
+);
+export const removeFromFavs = createAsyncThunk(
+    '/removeFromFavs',
+    async (updatedDrink) => {
+        const response = await fetch(`${URL}removeFromFavs`, {
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            method: 'POST',
+            body: JSON.stringify({ ...updatedDrink }),
+        });
+        const jsonResponse = await response.json();
+        if (response.status === 400) {
+            throw new Error(jsonResponse.message);
+        }
+        if (response.status === 200) {
+            return jsonResponse;
+        }
+    }
+);
+
+export const addComment = createAsyncThunk(
+    '/addComment',
+    async (newComment) => {
+        const response = await fetch(`${URL}addComment`, {
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            method: 'POST',
+            body: JSON.stringify({ ...newComment }),
+        });
+        const jsonResponse = await response.json();
+        if (response.status === 400) {
+            throw new Error(jsonResponse.message);
+        }
+        if (response.status === 200) {
             return jsonResponse;
         }
     }
@@ -66,12 +128,15 @@ export const drinksSlice = createSlice({
             if (action.payload === '') {
                 state.filteredDrinks = [];
             }
-            const filteredData = state.drinks.filter((value) =>
-                value.name
-                    .toLowerCase()
-                    .trim()
-                    .includes(action.payload.toLowerCase().trim())
-            );
+            const filteredData = state.drinks.filter((value) => {
+                return (
+                    value.name
+                        .toLowerCase()
+                        .trim()
+                        .includes(action.payload.toLowerCase().trim()) ||
+                    value.category.includes(action.payload)
+                );
+            });
             state.filteredDrinks = filteredData;
         },
         resetFilter: (state, action) => {
@@ -101,8 +166,18 @@ export const drinksSlice = createSlice({
             .addCase(updateDrink.fulfilled, (state, action) => {
                 state.status = 'succeeded';
                 // We can directly add the new drink object to our drinks array
-                // console.log(action.payload.state);
-
+                state.drinks = action.payload;
+            })
+            .addCase(addToFavourites.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.drinks = action.payload;
+            })
+            .addCase(removeFromFavs.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.drinks = action.payload;
+            })
+            .addCase(addComment.fulfilled, (state, action) => {
+                state.status = 'succeeded';
                 state.drinks = action.payload;
             });
     },
