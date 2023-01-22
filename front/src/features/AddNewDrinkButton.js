@@ -1,13 +1,6 @@
-const AddNewDrinkButton = ({ handleOnAddNewDrink }) => {
-    return (
-        <>
-            <button
-                onClick={() => {
-                    handleOnAddNewDrink();
-                }}>
-                Add new drink
-            </button>
-        </>
-    );
-};
+import React from 'react';
+import { Link } from 'react-router-dom';
+const AddNewDrinkButton = () => (
+    <Link to='/recipes/add-recipe'>Add new drink</Link>
+);
 export default AddNewDrinkButton;
