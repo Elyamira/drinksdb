@@ -1,3 +1,4 @@
+import React from 'react';
 import LoginButton from './LoginButton';
 import { useAuth0 } from '@auth0/auth0-react';
 import LogoutButton from './LogoutButton';
@@ -6,51 +7,51 @@ import { Link } from 'react-router-dom';
 
 const Navbar = () => {
     const { user, isAuthenticated } = useAuth0();
-
     return (
-        <>
-            <nav className='flex justify-between items-center p-5'>
-                <div>
-                    <Link to='/'>
-                        <img
-                            className='w-2/12'
-                            src='/images/logo.svg'
-                            alt='logo'
-                        />
-                    </Link>
-                </div>
-                <ul className='flex gap-5'>
-                    {/* <li>My account({user?.nickname})</li> */}
-                    <li>
-                        <Link to='/'> Home</Link>
-                    </li>
+        <nav className='flex justify-between items-center fixed p-5 w-full  bg-white/70'>
+            <div>
+                <Link to='/'>
+                    <img
+                        className='w-24 h-24'
+                        src='/images/logo.svg'
+                        alt='logo'
+                    />
+                </Link>
+            </div>
+            <ul className='flex gap-5 items-center'>
+                {!isAuthenticated && <LoginButton />}
 
-                    {!isAuthenticated && <LoginButton />}
-                    {isAuthenticated && (
+                {isAuthenticated && (
+                    <>
                         <li>
-                            <img
-                                className='rounded-full w-8/12'
-                                src={user?.picture}
-                                alt='your avatar'
-                            />
+                            <LogoutButton />
                         </li>
-                    )}
-                    {isAuthenticated && (
-                        <>
-                            <li>
-                                <LogoutButton />{' '}
-                            </li>
-                            <li>
-                                <Link to='/favs'>My favourites</Link>
-                            </li>
-                        </>
-                    )}
+                        <li className='min-w-max'>
+                            <Link to='/favs'>My favourites</Link>
+                        </li>
+                    </>
+                )}
+                <li>
+                    <Link to='/'> Home</Link>
+                </li>
+                <li>
+                    <RandomDrinkButton />
+                </li>
+                {isAuthenticated && (
                     <li>
-                        <RandomDrinkButton />
+                        <Link to='/my-account'>
+                            <div className='w-12 h-12'>
+                                <img
+                                    className='rounded-full min-w-full'
+                                    src={user?.picture}
+                                    alt='your avatar'
+                                />
+                            </div>
+                        </Link>
                     </li>
-                </ul>
-            </nav>
-        </>
+                )}
+            </ul>
+        </nav>
     );
 };
 export default Navbar;
