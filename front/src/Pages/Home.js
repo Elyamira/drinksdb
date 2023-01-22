@@ -1,21 +1,27 @@
-import { useState } from 'react';
-import Navbar from '../components/navbar/Navbar';
-import Search from '../components/Search';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Drinks from '../components/Drinks';
 import ResetFilterButton from '../components/ReseteFilterButton';
-import AddNewDrinkButton from '../features/AddNewDrinkButton';
+import Search from '../components/Search';
+import { filter, resetFilter } from '../components/slices/drinksSlice';
 import { showPopup } from '../components/slices/popupInputsReducerSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import AddNewDrinkInputPopup from '../features/AddNewDrinkInputPopup';
+import AddNewDrinkButton from '../features/AddNewDrinkButton';
+import { useAuth0 } from '@auth0/auth0-react';
 
 const Home = () => {
     const [wordForFilter, setWordForFilter] = useState('');
-
+    const drinksCategories = [
+        'All Drinks',
+        'Hot',
+        'Cold',
+        'Party',
+        'Mocktails',
+        'Tea',
+    ];
     const getSearchedValue = (value) => {
         setWordForFilter(value);
     };
-    const popupState = useSelector((state) => state.popupInputs.status);
-
+    const { isAuthenticated } = useAuth0();
     const dispatch = useDispatch();
     const handleOnAddNewDrink = () => {
         dispatch(showPopup());
@@ -23,23 +29,40 @@ const Home = () => {
     const errorStatus = useSelector((state) => state.errorPopup.status);
 
     return (
-        <div className='flex flex-col space-between h-screen'>
-            <Navbar />
+        <div className='flex flex-col space-between h-full'>
             {errorStatus && <p>ERROR</p>}
             <main className='h-full flex flex-col justify-center items-center'>
                 <div className='flex gap-5 capitalize'>
-                    <h1>All drinks</h1>
-                    <h1>hot</h1>
-                    <h1>cold</h1>
-                    <h1>party</h1>
+                    {drinksCategories.map((category, idx) => (
+                        <h2
+                            className='cursor-pointer'
+                            key={idx}
+                            onClick={() => {
+                                if (category === 'All Drinks') {
+                                    dispatch(resetFilter(''));
+                                    setWordForFilter('');
+                                } else {
+                                    dispatch(resetFilter(''));
+                                    dispatch(filter(category));
+                                    setWordForFilter(category);
+                                }
+                            }}>
+                            {category}
+                        </h2>
+                    ))}
                 </div>
-                <AddNewDrinkButton handleOnAddNewDrink={handleOnAddNewDrink} />
+                {isAuthenticated ? (
+                    <AddNewDrinkButton
+                        handleOnAddNewDrink={handleOnAddNewDrink}
+                    />
+                ) : (
+                    <p>Log in to add a new drink</p>
+                )}
                 <Search onGetValue={(value) => getSearchedValue(value)} />
                 {wordForFilter.length > 0 && (
                     <ResetFilterButton onReset={() => setWordForFilter('')} />
                 )}
-                {popupState && <AddNewDrinkInputPopup />}
-                <Drinks />
+                <Drinks wordForFilter={wordForFilter} />
             </main>
         </div>
     );
