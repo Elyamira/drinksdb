@@ -1,57 +1,37 @@
+import React from 'react';
 import Modal from './modal/Modal';
 import { useSelector } from 'react-redux';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { updateDrink } from './slices/drinksSlice';
-import { hidePopup } from '../components/slices/popupInputsReducerSlice';
-import { showError } from '../components/slices/popupErrorMessageSlice';
+import { Link } from 'react-router-dom';
+import { addToFavourites, removeFromFavs } from './slices/drinksSlice';
 
-import EditDrinkContent from './EditDrinkContent';
 const DrinkDetailedInfo = (props) => {
     const { isAuthenticated, user } = useAuth0();
     const dispatch = useDispatch();
-    const drinks = useSelector((state) => state.drinksData.drinks);
+    const drinks = useSelector((state) => state.drinksData?.drinks);
     const chosenDrink = drinks?.find((drink) => drink._id === props.id);
     const [isEditionMode, setIsEditionMode] = useState(false);
-    const [editRequestStatus, setEditRequestStatus] = useState('idle');
 
-    const handleOnSave = async (drink) => {
-        const canSave =
-            drink.taste &&
-            drink.name &&
-            editRequestStatus === 'idle' &&
-            isAuthenticated;
-        let creatorId;
-        if (user) {
-            creatorId = user.sub;
-        }
-        if (canSave) {
-            try {
-                setEditRequestStatus('pending');
-                await dispatch(
-                    updateDrink({
-                        oldName: chosenDrink.name,
-                        taste: drink.taste,
-                        name: drink.name,
-                        creatorId,
-                    })
-                ).unwrap();
-            } catch (err) {
-                setEditRequestStatus('failed');
-                dispatch(hidePopup());
-                dispatch(showError());
-            } finally {
-                setEditRequestStatus('idle');
-                setIsEditionMode(false);
-                dispatch(hidePopup());
-            }
-        }
+    const handleAddToFavourites = async (name, personId) => {
+        await dispatch(
+            addToFavourites({
+                name,
+                personId,
+            })
+        ).unwrap();
     };
-    const handleOnCancel = () => {
-        setIsEditionMode(false);
+    const handleRemoveFromFavourites = async (name, personId) => {
+        await dispatch(
+            removeFromFavs({
+                name,
+                personId,
+            })
+        ).unwrap();
     };
 
+    const isInFavourites = chosenDrink.isInFavourites.includes(user?.sub);
     return (
         <Modal>
             <div className='drink-detailed-info'>
@@ -74,21 +54,45 @@ const DrinkDetailedInfo = (props) => {
                 </button>
                 {!isEditionMode && (
                     <>
-                        <p>Drink name: {chosenDrink.name}</p>
-                        <p>Drink taste: {chosenDrink.taste}</p>
+                        <p data-testid={chosenDrink.name}>
+                            Drink name: {chosenDrink.name}
+                        </p>
+                        <p data-testid={chosenDrink.taste}>
+                            Drink taste: {chosenDrink.taste}
+                        </p>
                     </>
                 )}
                 <div className='flex flex-col'>
-                    {isAuthenticated && <button>Add to favourites</button>}
+                    {isAuthenticated &&
+                        (!isInFavourites ? (
+                            <button
+                                onClick={() =>
+                                    handleAddToFavourites(
+                                        chosenDrink.name,
+                                        user?.sub
+                                    )
+                                }>
+                                Add to favourites
+                            </button>
+                        ) : (
+                            <button
+                                onClick={() =>
+                                    handleRemoveFromFavourites(
+                                        chosenDrink.name,
+                                        user?.sub
+                                    )
+                                }>
+                                Remove from favourites
+                            </button>
+                        ))}
                     {user?.sub && user.sub === chosenDrink.creatorId && (
                         <button onClick={setIsEditionMode}>Edit</button>
                     )}
-                    {isEditionMode && (
-                        <EditDrinkContent
-                            onSave={handleOnSave}
-                            onCancel={handleOnCancel}
-                        />
-                    )}
+                    <div>
+                        <Link to={`/recipes/${chosenDrink.name.toLowerCase()}`}>
+                            Read the full recipe
+                        </Link>
+                    </div>
                 </div>
             </div>
         </Modal>
