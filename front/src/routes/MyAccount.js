@@ -2,11 +2,14 @@ import { useAuth0 } from '@auth0/auth0-react';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { deleteDrink } from '../components/slices/drinksSlice';
+import { useDispatch } from 'react-redux';
 
 export const MyAccount = () => {
     const { user } = useAuth0();
     const allDrinks = useSelector((state) => state.drinksData);
     let creatorId;
+    const dispatch = useDispatch();
     if (user) {
         creatorId = user.sub;
     }
@@ -14,9 +17,8 @@ export const MyAccount = () => {
         return drink.isInFavourites.includes(creatorId);
     });
 
-    const onHandleDeleteDrink = (drinkName, id) => {
-        console.log('drinkName', drinkName);
-        console.log('drinkId', id);
+    const onHandleDeleteDrink = async (name) => {
+        await dispatch(deleteDrink({ name })).unwrap();
     };
     return (
         <div>
@@ -38,9 +40,7 @@ export const MyAccount = () => {
                                 Edit recipe
                             </Link>
                             <button
-                                onClick={() =>
-                                    onHandleDeleteDrink(drink.name, drink._id)
-                                }>
+                                onClick={() => onHandleDeleteDrink(drink.name)}>
                                 Delete drink from website
                             </button>
                         </div>

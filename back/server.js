@@ -24,6 +24,7 @@ app.post('/edit', api.updateDrink);
 app.post('/addToFavs', api.addDrinkToFavourites);
 app.post('/removeFromFavs', api.removeDrinkFromFavourites);
 app.post('/addComment', api.addCommentToRecipe);
+app.post('/deleteDrink', api.deleteDrinkByName);
 
 app.listen(PORT, () => {
     console.log(`app is up and running on port ${PORT}`);

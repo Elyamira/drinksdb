@@ -290,6 +290,27 @@ const api = () => {
             console.log(err);
         }
     };
+    const deleteDrinkByName = (req, response) => {
+        const { name } = req.body;
+        try {
+            Drink.deleteOne({ name: name.name }, (err, res) => {
+                if (res.acknowledged) {
+                    Drink.find(function (err, foundDrinks) {
+                        if (!err) {
+                            response.status(200).json(foundDrinks);
+                        }
+                    });
+                }
+                if (err) {
+                    return response.status(400).json({
+                        message: "Couldn't delete the drink",
+                    });
+                }
+            });
+        } catch (e) {
+            console.log(e);
+        }
+    };
 
     return {
         getAllDrinks,
@@ -299,6 +320,7 @@ const api = () => {
         addDrinkToFavourites,
         removeDrinkFromFavourites,
         addCommentToRecipe,
+        deleteDrinkByName,
     };
 };
 module.exports = api;

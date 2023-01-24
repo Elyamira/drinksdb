@@ -113,6 +113,25 @@ export const addComment = createAsyncThunk(
         }
     }
 );
+export const deleteDrink = createAsyncThunk('/deleteDrink', async (name) => {
+    const response = await fetch(`${URL}deleteDrink`, {
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        method: 'POST',
+        body: JSON.stringify({ name }),
+    });
+    console.log(response, 'RESPONSE 1');
+    const jsonResponse = await response.json();
+    if (response.status === 400) {
+        throw new Error(jsonResponse.message);
+    }
+    if (response.status === 200) {
+        console.log(response, 'Response 2 (200)');
+        return jsonResponse;
+    }
+});
 
 const initialState = {
     drinks: [],
@@ -177,6 +196,10 @@ export const drinksSlice = createSlice({
                 state.drinks = action.payload;
             })
             .addCase(addComment.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.drinks = action.payload;
+            })
+            .addCase(deleteDrink.fulfilled, (state, action) => {
                 state.status = 'succeeded';
                 state.drinks = action.payload;
             });
