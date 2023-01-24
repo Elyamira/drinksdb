@@ -45,7 +45,7 @@ const EditRecipe = () => {
     const [fileReaderResult, setFileReaderResult] = useState();
     const [imageLink, setImageLink] = useState();
     const [isErrorState, setIsErrorState] = useState(false);
-    const [isSuccessState, setIsSuccessState] = useState(true);
+    const [isSuccessState, setIsSuccessState] = useState(false);
 
     const handleOnChangeIngredient = (e, index) => {
         const ingredientsCopy = [...ingredients];
@@ -184,7 +184,9 @@ const EditRecipe = () => {
         return (
             <div>
                 <SuccessMessage />
-                <button>Take me to home page</button>
+                <Link to='/'>
+                    <button>Take me to home page</button>
+                </Link>
             </div>
         );
     }
