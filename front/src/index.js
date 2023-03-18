@@ -6,13 +6,8 @@ import { Provider } from 'react-redux';
 import { Auth0Provider } from '@auth0/auth0-react';
 import history from './utils/history';
 import { getConfig } from './config';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Favs from './routes/Favs';
-import { MyAccount } from './routes/MyAccount';
+import { BrowserRouter } from 'react-router-dom';
 import { PageWrapper } from './components/PageWrapper';
-import { Recipe } from './routes/Recipe';
-import AddRecipe from './routes/AddRecipe';
-import EditRecipe from './routes/EditRecipe';
 import storage from 'redux-persist/lib/storage';
 import { persistCombineReducers, persistStore } from 'redux-persist';
 import { applyMiddleware, createStore } from '@reduxjs/toolkit';
@@ -61,22 +56,7 @@ ReactDOM.render(
                     persistor={persistor}>
                     <BrowserRouter>
                         <PageWrapper>
-                            <Routes>
-                                <Route path='/' element={<App />}></Route>
-                                <Route path='/favs' element={<Favs />}></Route>
-                                <Route
-                                    path='/my-account'
-                                    element={<MyAccount />}></Route>
-                                <Route
-                                    path='/recipes/:recipe'
-                                    element={<Recipe />}></Route>
-                                <Route
-                                    path='/recipes/add-recipe'
-                                    element={<AddRecipe />}></Route>
-                                <Route
-                                    path='/account/edit-recipe/:recipe'
-                                    element={<EditRecipe />}></Route>
-                            </Routes>
+                            <App />
                         </PageWrapper>
                     </BrowserRouter>
                 </PersistGate>
