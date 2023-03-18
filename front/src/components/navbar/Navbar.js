@@ -10,7 +10,7 @@ const Navbar = () => {
     return (
         <nav className='flex justify-between items-center fixed p-5 w-full  bg-white/70'>
             <div>
-                <Link to='/'>
+                <Link to='/' data-testid='my-profile-link'>
                     <img
                         className='w-24 h-24'
                         src='/images/logo.svg'

@@ -2,7 +2,6 @@ import React from 'react';
 import { useEffect } from 'react';
 import reactDOM from 'react-dom';
 import classes from './modal.module.css';
-const portalElement = document.getElementById('overlays');
 const modalRoot = document.createElement('div');
 modalRoot.setAttribute('id', 'modal-root');
 document.body.appendChild(modalRoot);
@@ -19,7 +18,7 @@ const BackOverlay = (props) => {
 };
 const ModalBox = (props) => {
     return (
-        <div className={classes.modal}>
+        <div className={classes.modal} data-testid='modal'>
             <div>{props.children}</div>
         </div>
     );

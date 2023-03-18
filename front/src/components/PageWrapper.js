@@ -4,7 +4,7 @@ export const PageWrapper = ({ children }) => {
     return (
         <div>
             <Navbar />
-            <div className='min-h-[calc(100vh-3rem-9rem)] pt-36'>
+            <div className='min-h-[calc(100vh-3rem-48px)] pt-36'>
                 {children}
             </div>
 

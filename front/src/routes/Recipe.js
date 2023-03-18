@@ -14,12 +14,12 @@ export const Recipe = () => {
         (drink) => drink.name.toLowerCase() === recipe.toLowerCase()
     );
     const currentDrink = drinks[drinksIndex];
-
     const [comment, setComment] = React.useState('');
-    const { user } = useAuth0();
-    const commentsHeader = user
-        ? ' There are no comments yet. Be the first to comment.'
-        : ' There are no comments yet. Log in to leave the comment.';
+    const { user, isAuthenticated } = useAuth0();
+    const commentsHeader =
+        user && isAuthenticated
+            ? ' There are no comments yet. Be the first to comment.'
+            : ' There are no comments yet. Log in to leave the comment.';
     let creatorId;
     if (user) {
         creatorId = user.sub;
@@ -38,7 +38,7 @@ export const Recipe = () => {
         console.log(currentDrink, 'currentDrink');
         return (
             <div>
-                <h1>This is my awesome recipe of {recipe} </h1>
+                <h1>{`This is my awesome recipe of ${recipe}`}</h1>
                 {currentDrink.recipe.ingredients.map((ingr, idx) => (
                     <p key={idx}>{ingr}</p>
                 ))}
@@ -51,7 +51,9 @@ export const Recipe = () => {
                     {currentDrink?.comments?.length > 0 ? (
                         <div>
                             {currentDrink.comments.map((comment, idx) => (
-                                <p key={idx}>{comment.text}</p>
+                                <p data-testid={`comment-${idx}`} key={idx}>
+                                    {comment.text}
+                                </p>
                             ))}
                         </div>
                     ) : (
@@ -84,12 +86,7 @@ export const Recipe = () => {
                                     }}>
                                     Comment
                                 </button>
-                                <button
-                                    onClick={() => {
-                                        console.log(
-                                            'Handle closure of Comment&cancel buttons'
-                                        );
-                                    }}>
+                                <button onClick={() => setComment('')}>
                                     Cancel
                                 </button>
                             </div>
@@ -101,7 +98,7 @@ export const Recipe = () => {
     }
     return (
         <div>
-            <p>The recipe is not found</p>
+            <h3>The recipe is not found</h3>
         </div>
     );
 };

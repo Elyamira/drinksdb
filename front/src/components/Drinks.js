@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import DrinkDetailedInfo from './SingleDrink';
 import { selectAllDrinks, fetchDrinks } from './slices/drinksSlice';
 import { showError } from './slices/popupErrorMessageSlice';
 import { Link } from 'react-router-dom';
@@ -57,17 +56,18 @@ const Drinks = ({ wordForFilter }) => {
             <div className='flex gap-5 p-5 flex-wrap'>
                 {allDrinks &&
                     allDrinks.map((drink, index) => {
-                        const isInFavourites = drink.isInFavourites.includes(
+                        const isInFavourites = drink?.isInFavourites?.includes(
                             user?.sub
                         );
                         return (
                             <div key={index} className='cursor-pointer'>
                                 <div className='w-96  rounded-xl overflow-hidden bg-neutral-300 flex flex-col'>
                                     <div className='flex justify-between p-5 '>
-                                        <p>{drink.name}</p>
+                                        <h4>{drink.name}</h4>
                                         {isAuthenticated &&
                                             (!isInFavourites ? (
                                                 <button
+                                                    aria-label={`add-to-favs-${index}`}
                                                     onClick={() =>
                                                         handleAddToFavourites(
                                                             drink.name,
@@ -77,10 +77,11 @@ const Drinks = ({ wordForFilter }) => {
                                                     <img
                                                         className='h-5 w-5'
                                                         src='/images/black_heart_icon.svg'
-                                                        alt='add to favourites'></img>
+                                                        alt='Add to favourites'></img>
                                                 </button>
                                             ) : (
                                                 <button
+                                                    aria-label={`remove-from-favs-${index}`}
                                                     onClick={() =>
                                                         handleRemoveFromFavourites(
                                                             drink.name,

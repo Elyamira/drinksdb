@@ -4,7 +4,6 @@ import Drinks from '../components/Drinks';
 import ResetFilterButton from '../components/ReseteFilterButton';
 import Search from '../components/Search';
 import { filter, resetFilter } from '../components/slices/drinksSlice';
-import { showPopup } from '../components/slices/popupInputsReducerSlice';
 import AddNewDrinkButton from '../features/AddNewDrinkButton';
 import { useAuth0 } from '@auth0/auth0-react';
 
@@ -23,14 +22,11 @@ const Home = () => {
     };
     const { isAuthenticated } = useAuth0();
     const dispatch = useDispatch();
-    const handleOnAddNewDrink = () => {
-        dispatch(showPopup());
-    };
-    const errorStatus = useSelector((state) => state.errorPopup.status);
+    // const errorStatus = useSelector((state) => state.errorPopup.status);
 
     return (
         <div className='flex flex-col space-between h-full'>
-            {errorStatus && <p>ERROR</p>}
+            {/* {errorStatus && <p>ERROR</p>} */}
             <main className='h-full flex flex-col justify-center items-center'>
                 <div className='flex gap-5 capitalize'>
                     {drinksCategories.map((category, idx) => (
@@ -52,9 +48,7 @@ const Home = () => {
                     ))}
                 </div>
                 {isAuthenticated ? (
-                    <AddNewDrinkButton
-                        handleOnAddNewDrink={handleOnAddNewDrink}
-                    />
+                    <AddNewDrinkButton />
                 ) : (
                     <p>Log in to add a new drink</p>
                 )}
