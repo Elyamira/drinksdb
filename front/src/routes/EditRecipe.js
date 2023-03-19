@@ -166,14 +166,14 @@ const EditRecipe = () => {
                             : currentDrink.image,
                     })
                 ).unwrap();
-                setTaste('');
-                setName('');
             } catch (err) {
                 setEditRequestStatus('failed');
-                console.error("Couldn't update image");
+                setIsErrorState(true);
+                console.error("Couldn't update the drink");
             } finally {
                 setEditRequestStatus('idle');
-                console.log('Updated the image');
+                setTaste('');
+                setName('');
                 setIsSuccessState(true);
             }
         } else {

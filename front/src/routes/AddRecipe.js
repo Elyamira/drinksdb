@@ -3,8 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { addNewDrink } from '../components/slices/drinksSlice';
-import { showError } from '../components/slices/popupErrorMessageSlice';
-import { hidePopup } from '../components/slices/popupInputsReducerSlice';
+import SuccessMessage from '../components/modal/SuccessMessage';
+import ErrorMessage from '../components/modal/ErrorMessage';
 
 const AddRecipe = () => {
     const dispatch = useDispatch();
@@ -28,6 +28,8 @@ const AddRecipe = () => {
     const [servings, setServings] = useState(1);
     const [fileReaderResult, setFileReaderResult] = useState();
     const [imageLink, setImageLink] = useState();
+    const [isErrorState, setIsErrorState] = useState(false);
+    const [isSuccessState, setIsSuccessState] = useState(false);
 
     const handleOnChangeIngredient = (e, index) => {
         const ingredientsCopy = [...ingredients];
@@ -47,6 +49,11 @@ const AddRecipe = () => {
     if (user) {
         creatorId = user.sub;
     }
+    useEffect(() => {
+        setTimeout(() => {
+            if (isErrorState) setIsErrorState(false);
+        }, 5000);
+    });
 
     const handleImageUpload = (e) => {
         if (e.target.files && e.target.files.length > 0) {
@@ -147,18 +154,27 @@ const AddRecipe = () => {
                 ).unwrap();
                 setTaste('');
                 setName('');
+                setIsSuccessState(true);
             } catch (err) {
                 setAddRequestStatus('failed');
-                dispatch(hidePopup());
-                dispatch(showError());
+                setIsErrorState(true);
             } finally {
                 setAddRequestStatus('idle');
-                dispatch(hidePopup());
             }
         } else {
-            console.log('OOPS');
+            setIsErrorState(true);
         }
     };
+    if (isSuccessState) {
+        return (
+            <div>
+                <SuccessMessage />
+                <Link to='/'>
+                    <button>Take me to home page</button>
+                </Link>
+            </div>
+        );
+    }
 
     return (
         <div className='w-full pb-20'>
@@ -309,6 +325,7 @@ const AddRecipe = () => {
                     <button onClick={onAddDrink}>Submit</button>
                 </div>
             </div>
+            {isErrorState && <ErrorMessage />}
         </div>
     );
 };

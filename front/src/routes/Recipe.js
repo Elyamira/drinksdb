@@ -35,7 +35,6 @@ export const Recipe = () => {
     };
 
     if (drinksIndex !== -1) {
-        console.log(currentDrink, 'currentDrink');
         return (
             <div>
                 <h1>{`This is my awesome recipe of ${recipe}`}</h1>
