@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAllDrinks, fetchDrinks } from './slices/drinksSlice';
 import { showError } from './slices/popupErrorMessageSlice';
-import { Link } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
-import { addToFavourites, removeFromFavs } from './slices/drinksSlice';
+// import useWindowDimensions from './hooks/useWindowDimensions';
+import './Drinks.css';
+import DrinkCard from './DrinkCard';
 
 const Drinks = ({ wordForFilter }) => {
     const dispatch = useDispatch();
@@ -16,12 +17,12 @@ const Drinks = ({ wordForFilter }) => {
     );
 
     const drinksStatus = useSelector((state) => state.drinksData.status);
-    const { isAuthenticated, user } = useAuth0();
+    const { user } = useAuth0();
 
     useEffect(() => {
         const drinksToShow = wordForFilter ? filteredDrinks : drinks;
         setAllDrinks(drinksToShow);
-    }, [drinks, filteredDrinks]);
+    }, [drinks, filteredDrinks, wordForFilter]);
 
     useEffect(() => {
         if (drinksStatus === 'idle') {
@@ -29,86 +30,34 @@ const Drinks = ({ wordForFilter }) => {
         }
     }, [drinksStatus, dispatch]);
 
-    const handleAddToFavourites = async (name, personId) => {
-        await dispatch(
-            addToFavourites({
-                name,
-                personId,
-            })
-        ).unwrap();
-    };
-    const handleRemoveFromFavourites = async (name, personId) => {
-        await dispatch(
-            removeFromFavs({
-                name,
-                personId,
-            })
-        ).unwrap();
-    };
-
     if (drinksStatus === 'loading') {
         return <p data-testid='loader'> LOADING</p>;
     } else if (drinksStatus === 'error') {
         dispatch(showError());
     }
+
     return (
-        <div className='w-full'>
-            <div className='flex gap-5 p-5 flex-wrap'>
+        <div className='w-full flex justify-center'>
+            <div
+                className='flex flex-col items-center md:grid pb-12 lg:px-7 px-24'
+                style={{
+                    width: '100%',
+                    gridAutoRows: '1fr',
+                    gridTemplateColumns:
+                        'repeat(auto-fill, minmax(300px, 1fr))',
+                    gridGap: '20px 20px',
+                }}>
                 {allDrinks &&
                     allDrinks.map((drink, index) => {
                         const isInFavourites = drink?.isInFavourites?.includes(
                             user?.sub
                         );
                         return (
-                            <div key={index} className='cursor-pointer'>
-                                <div className='w-96  rounded-xl overflow-hidden bg-neutral-300 flex flex-col'>
-                                    <div className='flex justify-between p-5 '>
-                                        <h4>{drink.name}</h4>
-                                        {isAuthenticated &&
-                                            (!isInFavourites ? (
-                                                <button
-                                                    aria-label={`add-to-favs-${index}`}
-                                                    onClick={() =>
-                                                        handleAddToFavourites(
-                                                            drink.name,
-                                                            user?.sub
-                                                        )
-                                                    }>
-                                                    <img
-                                                        className='h-5 w-5'
-                                                        src='/images/black_heart_icon.svg'
-                                                        alt='Add to favourites'></img>
-                                                </button>
-                                            ) : (
-                                                <button
-                                                    aria-label={`remove-from-favs-${index}`}
-                                                    onClick={() =>
-                                                        handleRemoveFromFavourites(
-                                                            drink.name,
-                                                            user?.sub
-                                                        )
-                                                    }>
-                                                    <img
-                                                        className='h-5 w-5'
-                                                        src='/images/red_heart.svg'
-                                                        alt='Remove from favourites'></img>
-                                                </button>
-                                            ))}
-                                    </div>
-                                    <img
-                                        className='w-full h-56'
-                                        src={`${drink.image}`}
-                                        alt={drink.name}
-                                    />
-                                    <p className='p-5'>Taste: {drink.taste}</p>
-                                    <div className='self-center pb-5'>
-                                        <Link
-                                            to={`/recipes/${drink.name.toLowerCase()}`}>
-                                            Read the full recipe
-                                        </Link>
-                                    </div>
-                                </div>
-                            </div>
+                            <DrinkCard
+                                drink={drink}
+                                index={index}
+                                isInFavourites={isInFavourites}
+                            />
                         );
                     })}
             </div>

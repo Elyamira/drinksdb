@@ -4,7 +4,7 @@
     left: 0;
     width: 100%;
     height: 100vh;
-    z-index: 20;
+    z-index: 999;
     background-color: rgba(0, 0, 0, 0.75);
 }
 .modal {
@@ -12,23 +12,22 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 50%;
-    height: max-content;
-    top: 50%;
+    width: 380px;
+    min-height: max-content;
+    top: 60%;
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
     height: 30vh;
     background-color: white;
-    padding: 1rem;
+    padding: 2rem;
     margin: 0 auto;
     border-radius: 14px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-    z-index: 30;
+    z-index: 9999;
     animation: slide-down 300ms ease-out forwards;
 }
 @media (min-width: 768px) {
     .modal {
-        width: 30%;
         height: max-content;
     }
 }
