@@ -17,7 +17,8 @@ import popupInputsReducerSlice from './components/slices/popupInputsReducerSlice
 import popupRandomDrinkSlice from './components/slices/popupRandomDrinkSlice';
 import popupErrorMessageSlice from './components/slices/popupErrorMessageSlice';
 import thunk from 'redux-thunk';
-
+import popupDeleteSlice from './components/slices/popupDeleteDialogue';
+import Loader from './components/Loader';
 const onRedirectCallback = (appState) => {
     history.push(
         appState && appState.returnTo
@@ -43,6 +44,7 @@ const persistedReducer = persistCombineReducers(persistConfig, {
     popupInputs: popupInputsReducerSlice,
     popupRandomDrink: popupRandomDrinkSlice,
     errorPopup: popupErrorMessageSlice,
+    popupDeleteSlice: popupDeleteSlice,
 });
 const store = createStore(persistedReducer, applyMiddleware(thunk));
 
@@ -51,9 +53,7 @@ ReactDOM.render(
     <React.StrictMode>
         <Provider store={store}>
             <Auth0Provider {...providerConfig}>
-                <PersistGate
-                    loading={<div>Loading...</div>}
-                    persistor={persistor}>
+                <PersistGate loading={<Loader />} persistor={persistor}>
                     <BrowserRouter>
                         <PageWrapper>
                             <App />

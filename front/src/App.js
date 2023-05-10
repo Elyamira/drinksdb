@@ -6,12 +6,13 @@ import { MyAccount } from './routes/MyAccount';
 import { Recipe } from './routes/Recipe';
 import AddRecipe from './routes/AddRecipe';
 import EditRecipe from './routes/EditRecipe';
-
 import { Route, Routes } from 'react-router-dom';
+import Preloader from './components/Preloader';
+
 function App() {
     return (
-        <div className='App'>
-            <header className='App-header'>{/* <Home /> */}</header>
+        <div className='App selection:bg-secondary'>
+            <Preloader />
             <Routes>
                 <Route path='/' element={<Home />}></Route>
                 <Route path='/favs' element={<Favs />}></Route>

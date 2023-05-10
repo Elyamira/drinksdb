@@ -47,7 +47,7 @@ describe('with params, not signed', () => {
         await user.click(buttonForTea);
         const teaRecipePage = await screen.findByRole('heading', {
             level: 1,
-            name: /This is my awesome recipe of tea/i,
+            name: /How to make tea/i,
         });
         expect(teaRecipePage).toBeInTheDocument();
     });

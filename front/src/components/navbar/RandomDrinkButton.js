@@ -64,7 +64,7 @@ const RandomDrinkButton = () => {
         <>
             <button
                 onClick={showRandomDrink}
-                className='w-12 h-12'
+                className='w-10 h-10 sm:w-12 sm:h-12 transition duration-200 ease-in-out transform hover:-translate-y-1 hover:scale-110'
                 name='Get a random drink'>
                 <img
                     alt='Get a random drink'

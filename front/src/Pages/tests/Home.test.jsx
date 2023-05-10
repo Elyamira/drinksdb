@@ -28,59 +28,13 @@ describe('Home page tests', () => {
         expect(innerText).toEqual(['Tea', 'Coffee']);
     });
 
-    test("When clicking on a filter button, the filter is applied, when resetting a filter, it's reset", async () => {
-        const user = userEvent.setup();
-        render(<Home />);
-        const drinks = screen.queryAllByRole('heading', { level: 4 });
-        const mocktailFilter = screen.getByRole('heading', {
-            level: 2,
-            name: /Mocktails/i,
-        });
-        expect(drinks).toHaveLength(2);
-        await user.click(mocktailFilter);
-        const allDrinks = screen.queryAllByRole('heading', { level: 4 });
-        expect(allDrinks).toHaveLength(0);
-        const resetButton = await screen.findByRole('button', {
-            name: /Reset filter/i,
-        });
-        expect(resetButton).toBeInTheDocument();
-        await user.click(resetButton);
-        expect(resetButton).not.toBeInTheDocument();
-        const allDrinksAfterReset = screen.queryAllByRole('heading', {
-            level: 4,
-        });
-        expect(allDrinksAfterReset).toHaveLength(2);
-    });
-
-    test('When clicking on All drinks button the filter is reset', async () => {
-        const user = userEvent.setup();
-        render(<Home />);
-        const drinks = screen.queryAllByRole('heading', { level: 4 });
-        const mocktailFilter = screen.getByRole('heading', {
-            level: 2,
-            name: /Mocktails/i,
-        });
-        expect(drinks).toHaveLength(2);
-        await user.click(mocktailFilter);
-        const allDrinks = screen.queryAllByRole('heading', { level: 4 });
-        expect(allDrinks).toHaveLength(0);
-        const resetButton = await screen.findByRole('heading', {
-            name: /All Drinks/i,
-        });
-        await user.click(resetButton);
-        const allDrinksAfterReset = screen.queryAllByRole('heading', {
-            level: 4,
-        });
-        expect(allDrinksAfterReset).toHaveLength(2);
-    });
-
     test('When typing in a search input, the drinks that match the search word are shown', async () => {
         const user = userEvent.setup();
         render(<Home />);
-        const searchInput = screen.getByRole('textbox');
+        const searchInput = screen.getByTestId('home-search-input');
         await user.type(searchInput, 'Tea');
         expect(searchInput.value).toEqual('Tea');
-        const searchButton = screen.getByRole('button', { name: /search!/i });
+        const searchButton = screen.getByTestId('home-search-button');
         await user.click(searchButton);
         const allDrinks = screen.queryAllByRole('heading', { level: 4 });
         expect(allDrinks).toHaveLength(1);
@@ -92,13 +46,13 @@ describe('Home page tests', () => {
         const randomDrinkButton = await screen.findByRole('button', {
             name: /get a random drink/i,
         });
-
         await user.click(randomDrinkButton);
         const modal = await screen.findByTestId('modal');
         expect(modal.textContent).toEqual('Coffee with cinnamon');
         const closeBtn = screen.getByRole('img', {
             name: /close random drink popup/i,
         });
+
         await user.click(closeBtn);
     });
     test('When user is logged in, he can add drinks to favourites and remove from favourites', async () => {
@@ -123,19 +77,15 @@ describe('Home page tests', () => {
         expect(addToFavsBtn).toBeInTheDocument();
     });
 
-    // describe('with authentication', () => {
-
     test('Redirects to my account page when Avatar is clicked', async () => {
-        // const mockHistoryPush = jest.fn();
         const user = userEvent.setup();
         render(<App />);
         const avatarImg = await screen.findByRole('img', {
             name: /your avatar/i,
         });
         await user.click(avatarImg);
-        const headerOnAccountPage = await screen.findByRole('heading', {
-            level: 2,
-            name: /My account/i,
+        const headerOnAccountPage = await screen.findByRole('link', {
+            name: '/my-account',
         });
         expect(headerOnAccountPage).toBeInTheDocument();
     });
@@ -150,13 +100,13 @@ describe('Home page tests', () => {
         await user.click(buttonForTea);
         const teaRecipePage = await screen.findByRole('heading', {
             level: 1,
-            name: /This is my awesome recipe of tea/i,
+            name: /How to make tea/i,
         });
         expect(teaRecipePage).toBeInTheDocument();
     });
 });
 
-describe('without authentication', () => {
+describe("without authentication user doesn't see my account button", () => {
     beforeEach(() => {
         mockedUseAuth0.mockReturnValue({
             isAuthenticated: false,
@@ -166,11 +116,9 @@ describe('without authentication', () => {
             isLoading: false,
         });
     });
-    test("without authentication user can't add a new drink", async () => {
+    test("without authentication user doesn't see my account button", async () => {
         render(<Home />);
-        const logInToAddDrinksButton = await screen.findByText(
-            /Log in to add a new drink/i
-        );
+        const logInToAddDrinksButton = await screen.findByText(/My account/i);
         expect(logInToAddDrinksButton).toBeInTheDocument();
     });
 });

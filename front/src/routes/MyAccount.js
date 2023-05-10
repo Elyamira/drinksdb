@@ -1,10 +1,10 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { deleteDrink } from '../components/slices/drinksSlice';
 import { useDispatch } from 'react-redux';
 import { fetchDrinks } from '../components/slices/drinksSlice';
+import DrinkCard from '../components/DrinkCard';
+import Ticker from '../components/Ticker';
 
 export const MyAccount = () => {
     const { user } = useAuth0();
@@ -25,45 +25,53 @@ export const MyAccount = () => {
         }
     }, [drinksStatus, dispatch]);
 
-    const onHandleDeleteDrink = async (name) => {
-        await dispatch(deleteDrink({ name })).unwrap();
-    };
     if (!user) {
         return (
-            <div>
-                <h2>
-                    Please log in to see your account details and manage drinks
-                </h2>
-            </div>
+            <Ticker
+                firstLine='Please log in'
+                secondLine='to manage your drinks'
+                classes='min-h-[60vh]'
+            />
         );
     }
-    return (
-        <div>
-            <h2>My Account</h2>
-            <div>
-                {/* <button
-                    onClick={() => {
-                        console.log('change image');
-                    }}>
-                    Change account's image
-                </button> */}
 
-                <h3>Drinks added by you</h3>
-                {drinksAddedByUser.map((drink, idx) => {
-                    return (
-                        <div key={idx} className='flex gap-5'>
-                            <p>{drink.name}</p>
-                            <Link
-                                to={`/account/edit-recipe/${drink.name.toLowerCase()}`}>
-                                Edit recipe
-                            </Link>
-                            <button
-                                onClick={() => onHandleDeleteDrink(drink.name)}>
-                                Delete drink from website
-                            </button>
-                        </div>
-                    );
-                })}
+    return (
+        <div className='overflow-x-hidden'>
+            <div>
+                <h3 className='text-6xl text-center py-7 font-yellowTail overflow-x-hidden'>
+                    Manage drinks you've added
+                </h3>
+                <div className='w-full flex justify-center relative overflow-x-hidden'>
+                    <div
+                        className='flex flex-col items-center md:grid pb-12 lg:px-7 px-24'
+                        style={{
+                            width: '100%',
+                            gridAutoRows: '1fr',
+                            gridTemplateColumns:
+                                'repeat(auto-fill, minmax(300px, 1fr))',
+                            gridGap: '20px 20px',
+                            justifyItems: 'center',
+                        }}>
+                        {drinksAddedByUser.length > 0 ? (
+                            drinksAddedByUser.map((drink, idx) => {
+                                return (
+                                    <DrinkCard
+                                        key={idx}
+                                        drink={drink}
+                                        isWithUserButtons={false}
+                                        index={idx}
+                                    />
+                                );
+                            })
+                        ) : (
+                            <Ticker
+                                firstLine="You haven't added"
+                                secondLine='any drinks yet'
+                                classes='pt-[10vh]'
+                            />
+                        )}
+                    </div>
+                </div>
             </div>
         </div>
     );

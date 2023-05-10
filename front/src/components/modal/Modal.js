@@ -18,7 +18,7 @@ const BackOverlay = (props) => {
 };
 const ModalBox = (props) => {
     return (
-        <div className={classes.modal} data-testid='modal'>
+        <div className={`z-[9999] ${classes.modal}`} data-testid='modal'>
             <div>{props.children}</div>
         </div>
     );

@@ -3,14 +3,15 @@ import { fetchDrinks } from '../components/slices/drinksSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { useAuth0 } from '@auth0/auth0-react';
 import { showError } from '../components/slices/popupErrorMessageSlice';
-import { removeFromFavs } from '../components/slices/drinksSlice';
+import DrinkCard from '../components/DrinkCard';
+import Ticker from '../components/Ticker';
+import Loader from '../components/Loader';
 
 const Favs = () => {
     const { user } = useAuth0();
     const dispatch = useDispatch();
     const allDrinks = useSelector((state) => state.drinksData);
     const drinksStatus = useSelector((state) => state.drinksData.status);
-
     let creatorId;
     if (user) {
         creatorId = user.sub;
@@ -25,33 +26,42 @@ const Favs = () => {
     });
 
     if (drinksStatus === 'loading') {
-        return <p data-testid='loader'> LOADING</p>;
+        return <Loader />;
     } else if (drinksStatus === 'error') {
         dispatch(showError());
     }
-    const handleRemoveFromFavourites = async (name, personId) => {
-        await dispatch(
-            removeFromFavs({
-                name,
-                personId,
-            })
-        ).unwrap();
-    };
-    return (
-        <div>
-            <h2>My favs</h2>
-            {favouriteDrinks?.map((drink, index) => (
-                <div key={index} className='flex gap-5'>
-                    <p key={index}>{drink.name}</p>
-                    <button
-                        onClick={() => {
-                            handleRemoveFromFavourites(drink.name, creatorId);
-                        }}>
-                        Remove From favourites
-                    </button>
+    if (favouriteDrinks?.length === 0) {
+        return (
+            <Ticker
+                firstLine="You haven't added"
+                secondLine='any drinks to favourites'
+                classes='pt-[10vh]'
+            />
+        );
+    }
+    if (favouriteDrinks?.length > 0) {
+        return (
+            <div className='w-full flex justify-center mt-10'>
+                <div
+                    className='flex flex-col items-center md:grid pb-12 lg:px-7 px-24'
+                    style={{
+                        width: '100%',
+                        gridAutoRows: '1fr',
+                        gridTemplateColumns:
+                            'repeat(auto-fill, minmax(300px, 1fr))',
+                        gridGap: '20px 20px',
+                        justifyItems: 'center',
+                    }}>
+                    {favouriteDrinks?.map((drink, index) => (
+                        <DrinkCard
+                            drink={drink}
+                            isInFavourites={true}
+                            index={index}
+                        />
+                    ))}
                 </div>
-            ))}
-        </div>
-    );
+            </div>
+        );
+    }
 };
 export default Favs;

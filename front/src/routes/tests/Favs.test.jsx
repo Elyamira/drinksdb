@@ -7,7 +7,7 @@ import { waitFor } from '../../test-utils/';
 jest.mock('@auth0/auth0-react');
 
 const mockedUseAuth0 = mocked(useAuth0, true);
-
+jest.useFakeTimers();
 describe('Favs tests', () => {
     beforeEach(() => {
         mockedUseAuth0.mockReturnValue({

@@ -1,11 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import Drinks from '../components/Drinks';
-import ResetFilterButton from '../components/ReseteFilterButton';
 import Search from '../components/Search';
 import { filter, resetFilter } from '../components/slices/drinksSlice';
 import AddNewDrinkButton from '../features/AddNewDrinkButton';
-import { useAuth0 } from '@auth0/auth0-react';
 import { motion } from 'framer-motion';
 import RandomDrinkButton from '../components/navbar/RandomDrinkButton';
 
@@ -22,7 +20,6 @@ const Home = () => {
     const getSearchedValue = (value) => {
         setWordForFilter(value);
     };
-    const { isAuthenticated } = useAuth0();
     const [activeCategoryIdx, setActiveCategoryIdx] = useState(0);
     const dispatch = useDispatch();
     const navigationRef = useRef();
@@ -41,18 +38,16 @@ const Home = () => {
     //     }
     // }, [x, children.length]);
 
-    // const errorStatus = useSelector((state) => state.errorPopup.status);
     return (
         <div className='flex flex-col space-between h-full'>
-            {/* {errorStatus && <p>ERROR</p>} */}
             <main className='h-full flex flex-col justify-center items-center'>
-                <div className='fixed top-[72px] bg-primary/70 w-full flex flex-col items-center py-5 z-40'>
+                <div className='fixed top-[58px] sm:top-[72px] bg-primary/70 w-full flex flex-col items-center py-5 z-40'>
                     <div
                         onMouseLeave={() => setX(null)}
-                        className='drinks-navigation flex gap-5 capitalize justify-center relative w-full pb-5'
+                        className='hidden sm:flex drinks-navigation gap-5 capitalize justify-center relative w-full pb-5'
                         ref={navigationRef}>
                         {drinksCategories.map((category, idx) => (
-                            <div className='relative'>
+                            <div className='relative' key={idx}>
                                 <h2
                                     className={`${
                                         idx === activeCategoryIdx
@@ -124,13 +119,7 @@ const Home = () => {
                         </div>
                         <div className='flex items-center'>
                             <RandomDrinkButton />
-                            {/* {
-                                isAuthenticated &&  */}
                             <AddNewDrinkButton />
-                            {/* : (
-                                    <p>Log in to add a new drink</p>
-                                )
-                            } */}
                         </div>
                     </div>
                 </div>

@@ -3,12 +3,13 @@ import { Link } from 'react-router-dom';
 const AddNewDrinkButton = () => (
     <Link to='/recipes/add-recipe'>
         <svg
+            data-testid='add-recipe'
             xmlns='http://www.w3.org/2000/svg'
             fill='none'
             viewBox='0 0 24 24'
             strokeWidth={1.5}
             stroke='currentColor'
-            className='w-12 h-12 text-quaternary'>
+            className='w-10 h-10 sm:w-12 sm:h-12 text-quaternary transition duration-200 ease-in-out transform hover:-translate-y-1 hover:scale-110'>
             <path
                 strokeLinecap='round'
                 strokeLinejoin='round'

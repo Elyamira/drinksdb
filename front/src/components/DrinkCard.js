@@ -1,36 +1,17 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useDispatch } from 'react-redux';
 import { addToFavourites, removeFromFavs } from './slices/drinksSlice';
-const motionRight = {
-    rest: {
-        scale: 1,
-        originX: '100%',
-    },
-    hover: {
-        scale: 0,
-    },
-};
-const motionLeft = {
-    rest: {
-        scale: 0,
-        originX: 0,
-    },
-    hover: {
-        scale: 1,
-    },
-};
-const textMotion = {
-    rest: {
-        x: 0,
-    },
-    hover: {
-        x: 24,
-    },
-};
-const DrinkCard = ({ drink, index, isInFavourites }) => {
+import CTAButton from './CTAButton';
+import DeleteDrinkButton from './DeleteDrinkButton';
+
+const DrinkCard = ({
+    drink,
+    index,
+    isInFavourites,
+    isWithUserButtons = true,
+}) => {
     const { isAuthenticated, user } = useAuth0();
     const [showLikeanimation, setShowLikeAnimation] = useState({
         isAnimated: false,
@@ -53,9 +34,10 @@ const DrinkCard = ({ drink, index, isInFavourites }) => {
             })
         ).unwrap();
     };
+
     return (
         <div className='group rounded-xl bg-primary flex flex-col h-full min-w-[320px] max-w-[380px] w-full'>
-            <div className='Card bg-primary h-full transition-colors group-hover:bg-[#fef0c1] group-hover:transition-colors'>
+            <div className='Card bg-primary h-full transition-colors group-hover:bg-[#fef0c1] group-hover:transition-colors relative'>
                 <Link to={`/recipes/${drink.name.toLowerCase()}`}>
                     <div className='Card-image-container'>
                         <img
@@ -74,7 +56,7 @@ const DrinkCard = ({ drink, index, isInFavourites }) => {
                             className='Card-line'
                             d='M 0 100 Q 50 200 100 250 Q 250 400 350 300 C 400 250 550 150 650 300 Q 750 450 800 400'
                             stroke='pink'
-                            stroke-width='3'
+                            strokeWidth='3'
                             fill='transparent'
                         />
                     </svg>
@@ -83,10 +65,15 @@ const DrinkCard = ({ drink, index, isInFavourites }) => {
                     <h4 className='text-xl Card-title max-w-[90%]'>
                         {drink.name}
                     </h4>
-                    {isAuthenticated && (
+                    {isWithUserButtons && isAuthenticated && (
                         <button
                             className='absolute top-1/2 right-0 -translate-y-1/2 '
-                            aria-label={`add-to-favs-${index}`}
+                            aria-label={
+                                showLikeanimation.isAnimated &&
+                                showLikeanimation.index === index
+                                    ? `add-to-favs-${index}`
+                                    : `remove-from-favs-${index}`
+                            }
                             onClick={() =>
                                 isInFavourites ||
                                 (showLikeanimation.isAnimated &&
@@ -114,7 +101,7 @@ const DrinkCard = ({ drink, index, isInFavourites }) => {
                                               index: index,
                                           });
                                 }}
-                                class={`Heart ${
+                                className={`Heart ${
                                     isInFavourites ||
                                     (showLikeanimation.isAnimated &&
                                         showLikeanimation.index === index)
@@ -124,73 +111,40 @@ const DrinkCard = ({ drink, index, isInFavourites }) => {
                         </button>
                     )}
                 </div>
-                <Link
-                    to={`/recipes/${drink.name.toLowerCase()}`}
-                    className='Card-content text-black flex flex-col flex-1'>
-                    {/* <div className='Card-content text-black flex flex-col flex-1'> */}
-                    <p className='px-5 pb-5'>Taste: {drink.taste}</p>
-                    <motion.div
-                        className='-ml-6 self-center flex-1 flex items-end z-40 text-primary'
-                        initial='rest'
-                        whileHover='hover'>
-                        <motion.div
-                            className=''
-                            variants={motionLeft}
-                            transition={{
-                                ease: [0.63, 0, 0.33, 0.99],
-                                duration: 0.38,
-                            }}>
-                            <div className='h-8 w-8 bg-quaternary rounded-full flex items-center justify-center'>
-                                <svg
-                                    xmlns='http://www.w3.org/2000/svg'
-                                    fill='none'
-                                    viewBox='0 0 24 24'
-                                    strokeWidth={1.5}
-                                    stroke='currentColor'
-                                    className='w-4 h-4'>
-                                    <path
-                                        strokeLinecap='round'
-                                        strokeLinejoin='round'
-                                        d='M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3'
-                                    />
-                                </svg>
-                            </div>
-                        </motion.div>
-                        <motion.div
-                            variants={textMotion}
-                            transition={{
-                                ease: [0.63, 0, 0.33, 0.99],
-                                duration: 0.38,
-                            }}>
-                            <p className='bg-quaternary w-max cursor-pointer rounded-2xl px-2.5 h-8 flex items-center -ml-6'>
-                                Read the full recipe
-                            </p>
-                        </motion.div>
-
-                        <motion.div
-                            className='h-8 w-8 bg-quaternary rounded-full flex items-center justify-center'
-                            variants={motionRight}
-                            transition={{
-                                ease: [0.63, 0, 0.33, 0.99],
-                                duration: 0.38,
-                            }}>
-                            <svg
-                                xmlns='http://www.w3.org/2000/svg'
-                                fill='none'
-                                viewBox='0 0 24 24'
-                                strokeWidth={1.5}
-                                stroke='currentColor'
-                                className='w-4 h-4'>
-                                <path
-                                    strokeLinecap='round'
-                                    strokeLinejoin='round'
-                                    d='M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3'
-                                />
-                            </svg>
-                        </motion.div>
-                    </motion.div>
-                    {/* </div> */}
-                </Link>
+                {isWithUserButtons ? (
+                    <Link
+                        to={`/recipes/${drink.name.toLowerCase()}`}
+                        className='Card-content text-black flex flex-col flex-1'>
+                        <p className='px-5 pb-5'>Taste: {drink.taste}</p>
+                        <CTAButton label='Read the full recipe' />
+                    </Link>
+                ) : (
+                    <div className='Card-content text-black flex flex-col flex-1'>
+                        <p className='px-5 pb-5'>Taste: {drink.taste}</p>
+                        <div className='self-center flex-1 flex items-center flex-col justify-end'>
+                            <Link
+                                to={`/account/edit-recipe/${drink.name.toLowerCase()}`}>
+                                <div className='flex'>
+                                    <svg
+                                        xmlns='http://www.w3.org/2000/svg'
+                                        fill='none'
+                                        viewBox='0 0 24 24'
+                                        strokeWidth={1.5}
+                                        stroke='currentColor'
+                                        className='w-6 h-6 text-quaternary transition duration-200 ease-in-out transform hover:-translate-y-1 hover:scale-110'>
+                                        <path
+                                            strokeLinecap='round'
+                                            strokeLinejoin='round'
+                                            d='M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10'
+                                        />
+                                    </svg>
+                                    Edit recipe
+                                </div>
+                            </Link>
+                            <DeleteDrinkButton drinkName={drink.name} />
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
