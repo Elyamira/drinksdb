@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import LoginButton from './LoginButton';
 import { useAuth0 } from '@auth0/auth0-react';
 import LogoutButton from './LogoutButton';
@@ -8,32 +8,12 @@ import MobileNavigation from './MobileNav';
 
 const Navbar = ({ setNewLocation }) => {
     const [openMobileNav, setOpenMobileNav] = React.useState(false);
-    const [windowWidth] = useState(window.innerWidth);
     const { user, isAuthenticated } = useAuth0();
     const location = useLocation();
     const menuItems = [
         { label: 'Home', link: 'home' },
         { label: 'My favorites', link: 'favs' },
     ];
-    const toggleNav = React.useCallback(() => {
-        setOpenMobileNav((v) => {
-            const htmlElem = document.getElementsByTagName('html')[0];
-            if (v) {
-                htmlElem.style.height = '';
-                htmlElem.style.overflow = '';
-            } else {
-                htmlElem.style.height = '100vh';
-                htmlElem.style.overflow = 'hidden';
-            }
-            return !v;
-        });
-    }, []);
-
-    React.useEffect(() => {
-        if (windowWidth > 768 && openMobileNav) {
-            setOpenMobileNav(false);
-        }
-    }, [windowWidth, openMobileNav]);
 
     return (
         <div>
@@ -130,7 +110,7 @@ const Navbar = ({ setNewLocation }) => {
                 <div className='z-[50] cursor-pointer transition duration-200 ease-in-out transform hover:-translate-y-1 hover:scale-110'>
                     <svg
                         onClick={() => {
-                            setOpenMobileNav(!openMobileNav);
+                            setOpenMobileNav((prev) => !prev);
                         }}
                         xmlns='http://www.w3.org/2000/svg'
                         fill='none'
@@ -148,7 +128,6 @@ const Navbar = ({ setNewLocation }) => {
                 <MobileNavigation
                     open={openMobileNav}
                     menuItems={menuItems}
-                    closeMenu={toggleNav}
                     setNewLocation={setNewLocation}
                 />
             </nav>

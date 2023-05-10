@@ -36,8 +36,8 @@ const MobileNavigation = ({ open, setNewLocation }) => {
             initial='hidden'
             animate={open ? 'show' : 'hidden'}
             className={`${
-                open ? 'h-screen w-screen' : ''
-            } bg-primary fixed top-0 left-0 z-40 hidden  flex-col justify-between px-5`}>
+                open ? '' : 'hidden'
+            } bg-primary fixed top-0 left-0 z-40 h-screen w-screen flex-col justify-between px-5`}>
             <ul className='mt-[20vh] flex flex-col items-center gap-5'>
                 <li
                     className={`relative after:absolute font-lato text-4xl after:w-full after:h-1 after:bg-quaternary after:bottom-0 after:left-0
