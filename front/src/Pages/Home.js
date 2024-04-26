@@ -28,15 +28,6 @@ const Home = () => {
         ? Array.from(navigationRef.current.children)
         : [];
     const [x, setX] = useState(null);
-    // useEffect(() => {
-    //     if (x === null && children.length > 0) {
-    //         setX(
-    //             children[0].getBoundingClientRect().left +
-    //                 children[0]?.getBoundingClientRect().width / 2 -
-    //                 10
-    //         );
-    //     }
-    // }, [x, children.length]);
 
     return (
         <div className='flex flex-col space-between h-full'>

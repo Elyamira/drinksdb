@@ -246,12 +246,12 @@ const AddRecipe = () => {
     }
 
     return (
-        <div className='w-full pb-20 relative md:static mt-10 h-full'>
-            <div className='flex w-11/12 mx-auto pr-20 flex-col md:flex-row md:pr-0 overflow-hidden'>
+        <div className='w-full pb-20 relative mt-10 flex-1'>
+            <div className='flex w-11/12 mx-auto flex-col md:flex-row md:pr-0 overflow-hidden gap-5'>
                 <div className='flex flex-col items-center md:items-start'>
                     <label
                         htmlFor='addImageInput'
-                        className='cursor-pointer text-2xl'>
+                        className='cursor-pointer text-xl pb-2'>
                         Upload image
                     </label>
                     <input
@@ -263,12 +263,16 @@ const AddRecipe = () => {
                         onChange={(e) => handleImageUpload(e)}
                     />
                     {mainImagePreview && (
-                        <div className='max-w-[320px] max-h-80 overflow-hidden rounded-lg pb-10 md:pb-0'>
-                            <img src={mainImagePreview} alt='uploaded' />
+                        <div className='max-w-[220px] max-h-80 overflow-hidden rounded-lg pb-10 md:pb-0'>
+                            <img
+                                src={mainImagePreview}
+                                alt='uploaded'
+                                className='rounded-lg'
+                            />
                         </div>
                     )}
                 </div>
-                <div className='flex flex-col w-[300px] md:w-[350px] mx-auto relative pb-10'>
+                <div className='flex flex-col w-[280px] md:w-[350px] mx-auto relative'>
                     <form onSubmit={onAddDrink}>
                         {/* STEP 1 */}
                         {currentStep === 1 && (
@@ -362,8 +366,9 @@ const AddRecipe = () => {
                                 </div>
                             </>
                         )}
-                        {/* STEP 2 */}
-                        <div className='max-h-80 overflow-y-auto overflow-x-hidden'>
+                        <div className='max-h-[18rem] overflow-y-auto overflow-x-hidden'>
+                            {/* STEP 2 */}
+
                             {currentStep === 2 && (
                                 <>
                                     <div className='flex flex-col'>
@@ -477,7 +482,7 @@ const AddRecipe = () => {
                             {/* STEP 3 */}
                             {currentStep === 3 && (
                                 <>
-                                    <div className='flex flex-col gap-3 max-h-64 overflow-y-auto overflow-x-hidden'>
+                                    <div className='flex flex-col gap-3 max-h-56 overflow-y-auto overflow-x-hidden'>
                                         <h2 className='text-2xl font-yellowTail'>
                                             Step by step directions
                                         </h2>
@@ -486,7 +491,7 @@ const AddRecipe = () => {
                                                 <h4>Step {idx + 1}</h4>
                                                 <AnimatedUnderlineWrapper>
                                                     <textarea
-                                                        className='outline-none w-full'
+                                                        className='outline-none w-full max-h-6 '
                                                         placeholder={
                                                             step.placeholder
                                                         }
@@ -547,7 +552,6 @@ const AddRecipe = () => {
                                 </>
                             )}
                         </div>
-
                         {currentStep === 3 && (
                             <div className='flex gap-5 pt-10 justify-end'>
                                 <button type='submit'>

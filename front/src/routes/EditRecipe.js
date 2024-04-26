@@ -212,21 +212,21 @@ const EditRecipe = () => {
     }
     if (drinkIndex !== -1) {
         return (
-            <div className='w-full pb-20 relative md:static mt-10 h-full'>
-                <div className='flex w-11/12 mx-auto pr-20 flex-col md:flex-row md:pr-0 overflow-hidden'>
+            <div className='w-full pb-20 relative mt-10 flex-1'>
+                <div className='flex w-11/12 mx-auto pr-20 flex-col md:flex-row md:pr-0 overflow-hidden gap-5'>
                     <div className='pb-5 md:pb-0 flex flex-col items-center md:items-start'>
                         <p className='text-xl font-yellowTail'>
                             Selected image:
                         </p>
 
                         {mainImagePreview && (
-                            <div className='max-w-[320px] max-h-72 overflow-hidden rounded-lg'>
+                            <div className='max-w-[220px] max-h-72 overflow-hidden rounded-lg pb-10 md:pb-0'>
                                 <img src={mainImagePreview} alt='uploaded' />
                             </div>
                         )}
                         <label
                             htmlFor='imageInput'
-                            className='cursor-pointer text-xl'>
+                            className='cursor-pointer text-xl pb-2'>
                             Upload new image
                         </label>
 
@@ -241,7 +241,7 @@ const EditRecipe = () => {
                         />
                     </div>
 
-                    <div className='flex flex-col w-[300px] md:w-[350px] mx-auto'>
+                    <div className='flex flex-col w-[280px] md:w-[350px] mx-auto relative'>
                         <form onSubmit={onUpdateDrink}>
                             {currentStep === 1 && (
                                 <>
@@ -352,7 +352,7 @@ const EditRecipe = () => {
                                     </div>
                                 </>
                             )}
-                            <div className='max-h-80 overflow-y-auto overflow-x-hidden'>
+                            <div className='max-h-[18rem] overflow-y-auto overflow-x-hidden'>
                                 {currentStep === 2 && (
                                     <div className='flex flex-col'>
                                         <h3 className='text-2xl font-yellowTail'>
@@ -452,7 +452,7 @@ const EditRecipe = () => {
                                     </div>
                                 )}
                                 {currentStep === 3 && (
-                                    <div className='flex flex-col gap-3'>
+                                    <div className='flex flex-col gap-3 max-h-56 overflow-y-auto overflow-x-hidden'>
                                         <h2 className='text-2xl font-yellowTail'>
                                             Step by step directions
                                         </h2>
@@ -461,7 +461,7 @@ const EditRecipe = () => {
                                                 <h4>Step {idx + 1}</h4>
                                                 <AnimatedUnderlineWrapper>
                                                     <textarea
-                                                        className=' outline-none w-full'
+                                                        className=' outline-none w-full max-h-6'
                                                         value={step}
                                                         onChange={(e) => {
                                                             handleOnChangeSteps(

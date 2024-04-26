@@ -1,30 +1,12 @@
-import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-
-const Preloader = () => {
-    const [loading, setLoading] = useState(false);
-    const location = useLocation();
-
-    useEffect(() => {
-        setLoading(true);
-
-        const timeoutId = setTimeout(() => {
-            setLoading(false);
-        }, 2400);
-
-        return () => {
-            clearTimeout(timeoutId);
-        };
-    }, [location]);
-
+const Preloader = ({ loading }) => {
     return (
         <div
             className={`${
                 loading
                     ? 'active-loading-screen opacity-100 animate-animateGrowDown origin-top'
                     : 'animate-animateShrinkUp origin-top'
-            } absolute flex top-0 left-0 bottom-0 w-screen z-[9999] bg-primary overflow-hidden h-[200vh]`}>
-            <div className='w-96 absolute left-1/2 -translate-x-1/2 top-1/4 -translate-y-1/2'>
+            } absolute flex top-0 left-0 bottom-0 w-screen z-[9999] bg-primary overflow-hidden h-[100vh]`}>
+            <div className='w-96 absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2'>
                 <svg
                     xmlns='http://www.w3.org/2000/svg'
                     xmlnsXlink='http://www.w3.org/1999/xlink'
